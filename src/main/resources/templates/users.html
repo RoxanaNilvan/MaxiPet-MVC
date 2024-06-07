@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Utilizatori</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-image: url('https://fetchpetcare.com/wp-content/uploads/2016/11/dreamstime_xxl_87694876.jpg');
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .adminbox {
+            background-color: rgba(245, 245, 245, 0.9);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .button {
+            background-color: #007bff;
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            height: 40px;
+            width: 120px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .form-control:invalid {
+            border-color: #dc3545;
+            background-color: #fff0f1;
+        }
+
+        .form-control:valid {
+            border-color: #28a745;
+            background-color: #f8f9fa;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        th {
+            background-color: #343a40;
+            color: #fff;
+        }
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="home-button">
+    <a class="home-button btn btn-primary" href="/admin">Home</a>
+</div>
+<div class="adminbox">
+    <div class="container-fluid text-center">
+        <h1>Manage Users</h1>
+        <button type="button" class="button" data-toggle="modal" data-target="#addUserModal">
+            Add New User
+        </button>
+        <div>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user: ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.firstName}"></td>
+                    <td th:text="${user.lastName}"></td>
+                    <td th:text="${user.userName}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td th:text="${user.role}"></td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" th:data-target="'#updateUserModal-' + ${user.id}">
+                            Edit
+                        </button>
+
+                        <div class="modal fade" th:id="'updateUserModal-' + ${user.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel2">Update Category</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="POST" th:action="@{'/user/updateUser/' + ${user.id}}" class="needs-validation" novalidate>
+                                            <div class="form-group">
+                                                <label for="updateFirstName">Name:</label>
+                                                <input type="text" id="updateFirstName" name="name" th:value="${user.firstName}" class="form-control" required>
+                                                <div class="invalid-feedback">Introduceti prenumele.</div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="updateLastName">Last Name:</label>
+                                                <input type="text" id="updateLastName" name="animal" th:value="${user.lastName}" class="form-control" required>
+                                                <div class="invalid-feedback">Introduceti numele.</div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="updateUserName">Username:</label>
+                                                <input type="text" id="updateUserName" name="userName" th:value="${user.userName}" class="form-control" required>
+                                                <div class="invalid-feedback">Introduceti numele de utilizator.</div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="updateEmail">Email:</label>
+                                                <input type="email" id="updateEmail" name="email" th:value="${user.email}" class="form-control" required>
+                                                <div class="invalid-feedback">Introduceti adresa de mail.</div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="updateRole">Role:</label>
+                                                <input type="text" id="updateRole" name="role" th:value="${user.role}" class="form-control" required>
+                                                <div class="invalid-feedback">Introduceti rolul.</div>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary">Update</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <form id="deleteForm-${user.id}" method="POST" th:action="@{'/user/removeUser/' + ${user.id}}">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title" id="exampleModalLabel3">Adăugare Utilizator Nou</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Închide">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm" method="POST" action="/user/insertUser" class="needs-validation" novalidate>
+                    <div class="form-group">
+                        <label for="firstName">Prenume:</label>
+                        <input type="text" id="firstName" name="firstName" class="form-control" pattern="[A-Za-z]+" required>
+                        <div class="invalid-feedback">Introduceți un prenume valid (doar litere).</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Nume:</label>
+                        <input type="text" id="lastName" name="lastName" class="form-control" pattern="[A-Za-z]+" required>
+                        <div class="invalid-feedback">Introduceți un nume valid (doar litere).</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="userName">Nume Utilizator:</label>
+                        <input type="text" id="userName" name="userName" class="form-control" pattern="[A-Za-z0-9]{5,50}" required>
+                        <div class="invalid-feedback">Numele de utilizator trebuie să aibă între 5 și 50 de caractere (litere și cifre).</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                        <div class="invalid-feedback">Introduceți un email valid.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Rol:</label>
+                        <input type="text" id="role" name="role" class="form-control" required>
+                        <div class="invalid-feedback">Introduceți un rol valid.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Parola:</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                        <div class="invalid-feedback">Introduceți o parolă.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg btn-gradient">Adaugă Utilizator</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successUserModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successUserModalLabel">Userul a fost adaugat cu succes!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="errorUserModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorUserModalLabel">Userul nu a fost adaugat!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successUpdateUserModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successUpdateUserModalLabel">Userul a fost actualizat cu success!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="errorUpdateUserModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorUpdateUserModalLabel">Userul nu a fost gasit!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successDeleteUserModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successDeleteUserModalLabel">Userul a fost sters cu success!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="errorDeleteUserModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorDeleteUserModalLabel">Userul nu a fost gasit!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+    function showSuccessModal() {
+        $('#successUserModal').modal('show');
+    }
+
+    function showErrorModal() {
+        $('#errorUserModal').modal('show');
+    }
+
+    function showSuccessUpdateModal() {
+        $('#successUpdateUserModal').modal('show');
+    }
+
+    function showErrorUpdateModal() {
+        $('#errorUpdateUserModal').modal('show');
+    }
+
+    function showSuccessDeleteModal() {
+        $('#successDeleteUserModal').modal('show');
+    }
+
+    function showErrorDeleteModal() {
+        $('#errorDeleteUserModal').modal('show');
+    }
+
+    const currentPathname = window.location.search;
+    const currentUrl = window.location.href;
+
+    if (currentPathname && (currentUrl.includes('?successInsertUser'))) {
+        showSuccessModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?errorInsertUser'))) {
+        showErrorModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?successUpdateUser'))) {
+        showSuccessUpdateModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?errorUpdateUser'))) {
+        showErrorUpdateModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?successDeleteUser'))) {
+        showSuccessDeleteModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?errorDeleteUser'))) {
+        showErrorDeleteModal();
+    }
+</script>
+<script>
+    (function() {
+        'use strict';
+
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+</body>
+</html>

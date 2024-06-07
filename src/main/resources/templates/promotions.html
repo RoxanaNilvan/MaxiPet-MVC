@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Promotions</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-image: url('https://fetchpetcare.com/wp-content/uploads/2016/11/dreamstime_xxl_87694876.jpg');
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .adminbox {
+            background-color: rgba(245, 245, 245, 0.9);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .button {
+            background-color: #007bff;
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            height: 40px;
+            width: 120px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .form-control:invalid {
+            border-color: #dc3545;
+            background-color: #fff0f1; /* Opțional: Adăugați un fundal roz pentru evidențiere */
+        }
+
+        .form-control:valid {
+            border-color: #28a745;
+            background-color: #f8f9fa; /* Opțional: Adăugați un fundal verde pentru a arăta că este valid */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        th {
+            background-color: #343a40;
+            color: #fff;
+        }
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="home-button">
+    <a class="home-button btn btn-primary" href="/admin">Home</a>
+</div>
+<div class="adminbox">
+    <div class="container-fluid text-center">
+        <h1>Manage Promotions</h1>
+        <!-- Buton pentru adăugarea unei noi promoții -->
+        <button type="button" class="button" data-toggle="modal" data-target="#addPromotionModal">
+            Add New Promotion
+        </button>
+        <div>
+            <!-- Tabel pentru afișarea promoțiilor existente -->
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Discount</th>
+                    <th>Product Name</th>
+                    <th>End Date</th>
+                    <th>Initial Price</th>
+                    <th>Final Price</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Iterare prin lista de promoții și afișarea acestora -->
+                <tr th:each="promotion: ${promotions}">
+                    <td th:text="${promotion.id}"></td>
+                    <td th:text="${promotion.discount}"></td>
+                    <td th:text="${promotion.productName}"></td>
+                    <td th:text="${promotion.endDate}"></td>
+                    <td th:text="${promotion.initialPrice}"></td>
+                    <td th:text="${promotion.finalPrice}"></td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" th:data-target="'#updatePromotionModal-' + ${promotion.id}">
+                            Edit
+                        </button>
+                            <div class="modal fade" th:id="'updatePromotionModal-' + ${promotion.id}" tabindex="-1" role="dialog" aria-labelledby="updatePromotionModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="updatePromotionModalLabel">Edit Promotion</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Formular pentru actualizarea promoției -->
+                                            <form method="POST" th:action="@{'/promotions/updatePromotion/' + ${promotion.id}}">
+                                                <div class="form-group">
+                                                    <label for="updateDiscount">Discount:</label>
+                                                    <input type="number" id="updateDiscount" name="discount" th:value="${promotion.discount}" class="form-control" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="updateEndDate">End Date:</label>
+                                                    <input type="date" id="updateEndDate" name="endDate" th:value="${promotion.endDate}" class="form-control" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Update</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <form id="deletePromotionForm-${promotion.id}" method="POST" th:action="@{'/promotions/deletePromotion/' + ${promotion.id}}">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addPromotionModal" tabindex="-1" role="dialog" aria-labelledby="addPromotionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPromotionModalLabel">Add New Promotion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" th:action="@{'/promotions/insertPromotion'}">
+                    <div class="form-group">
+                        <label for="newDiscount">Discount:</label>
+                        <input type="number" id="newDiscount" name="discount" class="form-control" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="newProductName">Product Name:</label>
+                        <input type="text" id="newProductName" name="productName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newEndDate">End Date:</label>
+                        <input type="date" id="newEndDate" name="endDate" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Promotion</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successPromotionModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successPromotionModalLabel">Promitia a fost adaugata cu succes!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="errorPromotionModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorPromotionModalLabel">Promotia nu a fost adaugata!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successUpdatePromotionModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successUpdatePromotionModalLabel">Promotiona fost actualizata cu success!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="errorUpdatePromotionModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorUpdatePromotionModalLabel">Promotia nu a fost gasita!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successDeletePromotionModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successDeletePromotionModalLabel">Promotia a fost stearsa cu success!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="errorDeletePromotionModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorDeleteUserModalLabel">Promotia nu a fost gasita!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Biblioteci JavaScript -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+    function showSuccessModal() {
+        $('#successPromotionModal').modal('show');
+    }
+
+    function showErrorModal() {
+        $('#errorPromotionModal').modal('show');
+    }
+
+    function showSuccessUpdateModal() {
+        $('#successUpdatePromotionModal').modal('show');
+    }
+
+    function showErrorUpdateModal() {
+        $('#errorUpdatePromotionModal').modal('show');
+    }
+
+    function showSuccessDeleteModal() {
+        $('#successDeletePromotionModal').modal('show');
+    }
+
+    function showErrorDeleteModal() {
+        $('#errorDeletePromotionModal').modal('show');
+    }
+
+    const currentPathname = window.location.search;
+    const currentUrl = window.location.href;
+
+    if (currentPathname && (currentUrl.includes('?successInsertPromotion'))) {
+        showSuccessModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?errorInsertPromotion'))) {
+        showErrorModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?successUpdatePromotion'))) {
+        showSuccessUpdateModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?errorUpdatePromotion'))) {
+        showErrorUpdateModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?successDeletePromotion'))) {
+        showSuccessDeleteModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?errorDeletePromotion'))) {
+        showErrorDeleteModal();
+    }
+</script>
+</body>
+</html>

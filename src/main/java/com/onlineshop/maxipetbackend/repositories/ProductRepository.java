@@ -1,0 +1,12 @@
+package com.onlineshop.maxipetbackend.repositories;
+
+import com.onlineshop.maxipetbackend.entities.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface ProductRepository extends JpaRepository<Product, String> {
+    Product findByName(String name);
+    Product findProductByPromotionsId(String promotionId);
+    List<Product> findByNameContainingIgnoreCase(String name);
+}

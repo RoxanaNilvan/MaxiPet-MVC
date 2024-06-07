@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Animal Quiz</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .quiz-header {
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .btn-submit {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-submit:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="home-button">
+    <a class="home-button btn btn-primary" href="/customer">Home</a>
+</div>
+<div class="container">
+    <div class="quiz-header text-center">
+        <h1>Animal Quiz</h1>
+        <p>Completează acest quiz pentru a ne spune mai multe despre animalele tale de companie!</p>
+    </div>
+    <form action="/findByQuiz" method="get">
+        <div class="form-group">
+            <label for="numAnimals">Câte animale de companie ai?</label>
+            <input type="number" class="form-control" id="numAnimals" name="numAnimals" min="0" required>
+        </div>
+        <div class="form-group">
+            <label for="animalTypes">Ce tipuri de animale de companie ai? (ex: câine, pisică, papagal)</label>
+            <input type="text" class="form-control" id="animalTypes" name="animalTypes" required>
+        </div>
+        <div class="form-group">
+            <label for="animalAges">Ce vârstă au animalele tale? (ex: 2, 5, 1)</label>
+            <input type="text" class="form-control" id="animalAges" name="animalAges" required>
+        </div>
+        <div class="form-group">
+            <label for="foodType">Ce tip de hrană preferă animalele tale? (uscată, umedă, specială pentru diete)</label>
+            <input type="text" class="form-control" id="foodType" name="foodType">
+        </div>
+        <div class="form-group">
+            <label for="careProducts">Ce tipuri de produse de îngrijire folosești pentru animalele tale? (șampoane, perii, soluții pentru urechi, tăierea unghiilor)</label>
+            <input type="text" class="form-control" id="careProducts" name="careProducts">
+        </div>
+
+        <div class="form-group">
+            <label for="toys">Ce tipuri de jucării preferă animalele tale? (jucării de ros, interactive, de pluș)</label>
+            <input type="text" class="form-control" id="toys" name="toys">
+        </div>
+        <div class="form-group">
+            <label for="accessories">Ai nevoie de accesorii speciale? (zgărzi, hamuri, lese, cuști de transport)</label>
+            <input type="text" class="form-control" id="accessories" name="accessories">
+        </div>
+        <div class="form-group">
+            <label for="brand">Ai un brand preferat?</label>
+            <input type="text" class="form-control" id="brand" name="brand">
+        </div>
+        <button type="submit" class="btn btn-submit btn-block">Trimite</button>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Actions</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .navbar {
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #d34549;
+        }
+
+        .jumbotron {
+            background-color: #d34549;
+            color: #fff;
+            padding: 3rem 1rem;
+            border-radius: 0;
+        }
+
+        .card {
+            border: none;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #d5565a;
+            border-color: #d34549;
+        }
+
+        .btn-primary:hover {
+            background-color: #d5565a;
+            border-color: #d5565a;
+        }
+        .btn-primary:active {
+            background-color: #e09898;
+        }
+
+        .modal-content {
+            border-radius: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('https://fetchpetcare.com/wp-content/uploads/2016/11/dreamstime_xxl_87694876.jpg');
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .btn-primary {
+            background-color: #d77777;
+            border-color: #d77777;
+        }
+
+        .btn-primary:hover {
+            background-color: #e09898;
+            border-color: #e09898;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .btn-primary:hover,
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+        }
+
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            display: inline-block;
+            width: 45%;
+            margin-right: 10px;
+        }
+
+        .form-control {
+            width: 100%;
+        }
+
+        .filter-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .sort-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 2px;
+        }
+
+        .footer {
+            border-top: 1px solid #ddd;
+        }
+
+        footer {
+            background-color: #f8f9fa;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .container-fluid {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .card {
+            margin: 2px;
+        }
+        .card-img-top {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+        }
+
+        .add-review-modal .modal-dialog {
+            max-width: 400px;
+            margin: 1.75rem auto;
+        }
+
+        .add-review-modal .modal-header {
+            background-color: #d77777;
+            color: white;
+            border-bottom: 1px solid #d77777;
+        }
+
+        .add-review-modal .modal-title {
+            font-size: 1.5rem;
+        }
+
+        .add-review-modal .modal-header .close {
+            color: white;
+        }
+
+        .add-review-modal .modal-body {
+            padding: 2rem;
+        }
+
+        .add-review-modal .form-group label {
+            font-weight: bold;
+        }
+
+        .add-review-modal .form-control {
+            border-radius: 0.25rem;
+            border: 1px solid #ced4da;
+            width: 500px;
+            font-size: 14px;
+        }
+
+        .add-review-modal .form-control:focus {
+            border-color: #d77777;
+            box-shadow: none;
+        }
+
+        .add-review-modal .invalid-feedback {
+            font-size: 0.875rem;
+        }
+
+        .add-review-modal .modal-footer {
+            border-top: 1px solid #ced4da;
+        }
+
+        .add-review-modal .btn-primary {
+            background-color: #d77777;
+            border-color: #d77777;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-review-modal .btn-primary:hover {
+            background-color: #d77777;
+            border-color: #d77777;
+        }
+
+        .add-review-modal .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-review-modal .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        .add-review-modal .form-group {
+            display: block;
+            margin-bottom: 15px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="/customer">Maxi Pet</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <form id="searchForm" action="/products/search" method="get" class="search-form mr-auto">
+                <input type="text" id="searchQuery" name="searchQuery" class="form-control search-input" placeholder="Search for products...">
+            </form>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="btn btn-primary" th:href="@{/items/findAllByUser/{userId}(userId=${userId})}">View Shopping Cart</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-primary" th:href="@{/ordersPlaced/ordersPlaced/{userId}(userId=${userId})}">View Placed Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-primary" th:href="@{/reviews/findAllReviewsByUser/}">View Placed Reviews</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-primary" href="/animalQuiz">Take Pet Quiz</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-primary" th:href="@{/logout}">Log out</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="jumbotron">
+        <h1 class="display-4">Bine ați venit la Maxi Pet!</h1>
+        <p class="lead">Aici găsiți cele mai bune produse pentru animalul dumneavoastră de companie.</p>
+    </div>
+
+
+    <div class="container mt-5">
+        <div class="filter-container">
+            <form action="/products/filter" method="get">
+                <div class="form-group">
+                    <label for="categoryName">Category Name:</label>
+                    <select id="categoryName" name="categoryName" class="form-control">
+                        <option value="">Select Category</option>
+                        <th:block th:each="categoryName : ${categoryNames}">
+                            <option th:value="${categoryName}" th:text="${categoryName}"></option>
+                        </th:block>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="categoryAnimal">Category Animal:</label>
+                    <select id="categoryAnimal" name="categoryAnimal" class="form-control">
+                        <option value="">Select Animal Type</option>
+                        <th:block th:each="animalType : ${animalTypes}">
+                            <option th:value="${animalType}" th:text="${animalType}"></option>
+                        </th:block>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Aplică</button>
+            </form>
+        </div>
+
+        <div class="sort-container">
+            <form action="/products/sort" method="get">
+                <div class="form-group">
+                    <label for="sortOrder">Sort by Price:</label>
+                    <select id="sortOrder" name="sortOrder" class="form-control">
+                        <option value="ascending">Ascending</option>
+                        <option value="descending">Descending</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Sort</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row" id="productContainer">
+        <div th:each="product : ${customerActions}" class="col-md-4">
+            <div class="card">
+                <img th:src="@{${product.imageUrl}}" class="card-img-top" alt="Product Image">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.name}"></h5>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group mt-2">
+                            <a th:href="@{'/product/' + ${product.id}}" class="btn btn-sm btn-primary mr-2">View</a>
+                            <button type="button" class="btn btn-sm btn-primary mr-2" data-toggle="modal" th:data-target="'#addToCartModal-' + ${product.id}">Add to Cart</button>
+                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" th:data-target="'#addReviewModal-' + ${product.id}">Add Review</button>
+                        </div>
+                        <small class="text-muted" th:text="'Pret: ' + ${product.price}"></small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" th:id="'addToCartModal-' + ${product.id}" tabindex="-1" role="dialog" aria-labelledby="'addToCartModalLabel-' + ${product.id}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" th:id="'addToCartModalLabel-' + ${product.id}">Adauga în cos</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="addToCartForm" th:action="@{'/cart/addToCart'}" method="POST">
+                            <div class="modal-body">
+                                <input type="hidden" id="productId" name="productId" th:value="${product.id}">
+                                <input type="hidden" id="productName" name="productName" th:value="${product.name}">
+                                <p th:text="${product.name}"></p>
+                                <img th:src="@{${product.imageUrl}}" class="card-img-top" alt="Product Image">
+                                <input type="number" id="quantity" name="quantity" min="1" value="1" class="form-control mb-3" placeholder="Cantitate">
+                                <button type="submit" class="btn btn-primary btn-block">Adauga în cos</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade add-review-modal" th:id="'addReviewModal-' + ${product.id}" tabindex="-1" role="dialog" aria-labelledby="'addReviewModalLabel-' + ${product.id}" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="max-width: 600px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" th:id="'addReviewModalLabel-' + ${product.id}">Adăugare review pentru produs</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="addReviewForm" th:action="@{/reviews/add}" method="POST" class="needs-validation" novalidate>
+                            <div class="modal-body">
+                                <input type="hidden" id="productId2" name="productId" th:value="${product.id}">
+
+                                <div class="form-group">
+                                    <label for="rating">Rating:</label>
+                                    <input type="number" id="rating" name="rating" min="1" max="5" class="form-control" required>
+                                    <div class="invalid-feedback">
+                                        Te rog să alegi un rating între 1 și 5.
+                                    </div>
+                                </div>
+
+                                <div class="form-group mt-3"> <!-- Adăugare spațiu între formulare -->
+                                    <label for="comment">Comentariu:</label>
+                                    <textarea id="comment" name="comment" rows="5" class="form-control" required></textarea> <!-- Creșterea numărului de rânduri -->
+                                    <div class="invalid-feedback">
+                                        Te rog să adaugi un comentariu.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Închide</button>
+                                <button type="submit" class="btn btn-primary">Trimite</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="notEnoughModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Cantitatea produsului depaseste limita maxima</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addedProduct" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addedProductLabel">Produs adaugat in cos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="reviewNotAdded" tabindex="-1" role="dialog" aria-labelledby="reviewNotAddedLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewNotAddedLabel">Recenzia nu a fost adaugata</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="reviewAdded" tabindex="-1" role="dialog" aria-labelledby="reviewAddedLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewAddedLabel">Recenzia a fost adaugata cu succes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    function showNotEnough() {
+        $('#notEnoughModal').modal('show');
+    }
+
+    function showAddedProduct() {
+        $('#addedProduct').modal('show');
+    }
+
+    function showNotAddedReview() {
+        $('#reviewNotAdded').modal('show');
+    }
+
+    function showAddedReview() {
+        $('#reviewAdded').modal('show');
+    }
+
+    $(document).ready(function() {
+        const searchParams = new URLSearchParams(window.location.search);
+        console.log("URL Search Params: ", searchParams.toString()); // Pentru depanare
+        if (searchParams.has('messageNotEnough')) {
+            showNotEnough();
+        }
+        if (searchParams.has('messageAddedToCart')) {
+            showAddedProduct();
+        }
+        if (searchParams.has('reviewInserted')) {
+            showAddedReview();
+        }
+        if (searchParams.has('reviewFailed')) {
+            showNotAddedReview();
+        }
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#searchQuery').on('keyup', function() {
+            var query = $(this).val();
+            $.ajax({
+                url: '/products/search',
+                type: 'GET',
+                data: { searchQuery: query },
+                success: function(data) {
+                    $('#productContainer').html(data);
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bun venit!</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url('https://static.vecteezy.com/ti/vetor-gratis/p3/1436655-banners-em-branco-com-crianca-e-cachorro-fofo-e-pet-shop-logo-isolado-no-fundo-branco-gratis-vetor.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .jumbotron {
+            background-color: #d34549;
+            color: #fff;
+            padding: 3rem;
+            border-radius: 1rem;
+            text-align: center;
+        }
+        .btn-container {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .btn {
+            border-radius: 2rem;
+            margin-bottom: 1rem;
+        }
+        .btn-primary {
+            background-color: #d5565a;
+            border-color: #d5565a;
+            color: #fff;
+        }
+        .btn-primary:active {
+            background-color: #e09898;
+        }
+        .btn-primary:hover {
+            background-color: #e09898;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Bună ziua!</h1>
+        <p class="lead">Ce acțiuni doriți să realizați?</p>
+    </div>
+    <div class="btn-container text-center">
+        <a href="/logout" class="btn btn-primary btn-lg">LogOut</a>
+        <a href="/produce" class="btn btn-primary btn-lg">Vizualizare Produse</a>
+        <a href="/category" class="btn btn-primary btn-lg">Vizualizare Categorii</a>
+        <a href="/users" class="btn btn-primary btn-lg">Vizualizare Utilizatori</a>
+        <a href="/orders" class="btn btn-primary btn-lg">Vizualizare Comenzi</a>
+        <a href="/promotions" class="btn btn-primary btn-lg">Vizualizare Promotii</a>
+        <a href="/review" class="btn btn-primary btn-lg">Vizualizare Recenzii</a>
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#mailModal">Trimite Mail</button>
+    </div>
+    <div class="modal fade" id="mailModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Trimite Mail</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="mailForm">
+                        <div class="form-group">
+                            <label for="toEmail">Adresă Email Destinatar:</label>
+                            <input type="email" class="form-control" id="toEmail" name="toEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subiect:</label>
+                            <input type="text" class="form-control" id="subject" name="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="body">Corpul Mesajului:</label>
+                            <textarea class="form-control" id="body" name="body" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Anulează</button>
+                    <button type="button" class="btn btn-primary" id="sendMailBtnModal">Trimite Mail</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+    document.getElementById("sendMailBtnModal").addEventListener("click", function() {
+        var toEmail = document.getElementById("toEmail").value;
+        var subject = document.getElementById("subject").value;
+        var body = document.getElementById("body").value;
+
+        var mailData = {
+            "toEmail": toEmail,
+            "subject": subject,
+            "body": body
+        };
+
+        fetch('http://localhost:8081/send/insert', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(mailData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response from backend:', data);
+                $('#mailModal').modal('hide');
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reviews Placed by User</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            padding-top: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin-top: 30px;
+        }
+
+        .review-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-card h5 {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .review-card p {
+            margin-bottom: 5px;
+        }
+
+        .review-card small {
+            color: #999;
+        }
+
+        .back-button {
+            margin-bottom: 20px;
+        }
+        .home-button-container {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="home-button-container">
+        <a href="/customer" class="btn btn-primary">Home</a>
+    </div>
+    <h2>Reviews Placed by User</h2>
+    <div th:each="review : ${reviews}" class="review-card">
+        <h5 th:text="${review.productName}">Product Name</h5>
+        <p th:text="'Rating: ' + ${review.rating}">Rating</p>
+        <p th:text="${review.comment}">Comment</p>
+        <small th:text="${review.id}">Review ID</small>
+        <div class="mt-2">
+            <button class="btn btn-warning" data-toggle="modal" th:data-target="'#updateModal' + ${review.id}">Update</button>
+            <form th:action="@{'/reviews/removeReview/' + ${review.id}}" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+    <div th:each="review : ${reviews}" th:id="'updateModal' + ${review.id}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel">Update Review</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{'/reviews/updateReview/' + ${review.id}}" method="POST">
+                        <div class="form-group">
+                            <label for="productName">Product Name</label>
+                            <input type="text" id="productName" name="productName" th:value="${review.productName}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="rating">Rating</label>
+                            <input type="number" id="rating" name="rating" th:value="${review.rating}" class="form-control" min="1" max="5">
+                        </div>
+                        <div class="form-group">
+                            <label for="comment">Comment</label>
+                            <textarea id="comment" name="comment" class="form-control" th:text="${review.comment}"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="reviewUpdated" tabindex="-1" role="dialog" aria-labelledby="reviewUpdatedLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewUpdatedLabel">Recenzia a fost actualizata cu succes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="reviewNotUpdated" tabindex="-1" role="dialog" aria-labelledby="reviewNotUpdatedLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewNotUpdatedLabel">Recenzia nu a putut fi actualizata</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDzwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+    function showUpdate() {
+        $('#reviewUpdated').modal('show');
+    }
+
+    function showNotUpdate() {
+        $('#reviewNotUpdated').modal('show');
+    }
+
+    $(document).ready(function() {
+        const searchParams = new URLSearchParams(window.location.search);
+        console.log("URL Search Params: ", searchParams.toString()); // Pentru depanare
+        if (searchParams.has('messageUpdateReview')) {
+            showUpdate();
+        }
+        if (searchParams.has('messageUpdateReviewFail')) {
+            showNotUpdate();
+        }
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${product.name}">Product Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            padding-top: 20px;
+
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .product-details {
+            margin-bottom: 50px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-details h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .product-details img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .product-details p {
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-img-top {
+            max-width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .d-flex {
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .btn-group .btn {
+            margin-right: 5px;
+        }
+
+        .text-muted {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 960px;
+        }
+        .review-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-card h5 {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .review-card p {
+            margin-bottom: 5px;
+        }
+
+        .review-card small {
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<div class="back-button">
+    <a href="/customer" class="btn btn-primary">Home</a>
+</div>
+<div class="container">
+    <div class="product-details">
+        <h1 th:text="${product.name}">Product Name</h1>
+        <img th:src="@{${product.imageUrl}}" class="img-fluid" alt="Product Image">
+        <p>Price: <span th:text="${product.price}">Product Price</span></p>
+        <form id="addToCartForm" th:action="@{'/cart/addToCart'}" method="POST">
+            <input type="hidden" id="productId" name="productId" th:value="${product.id}">
+            <input type="hidden" id="productName" name="productName" th:value="${product.name}">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" value="1" class="form-control mb-3" placeholder="Cantitate">
+            <button type="submit" class="btn btn-primary btn-block">Adauga în cos</button>
+        </form>
+    </div>
+    <div>
+        <h3>What other buyers think about our products</h3>
+        <div th:each="review : ${reviews}" class="review-card">
+            <h5 th:text="${review.userFirstName} + ' ' + ${review.userLastName}">User Name</h5>
+            <p th:text="'Rating: ' + ${review.rating}"></p>
+            <p th:text="${review.comment}">Comment</p>
+        </div>
+    </div>
+    <h2>Similar Products</h2>
+    <div class="row" id="productContainer">
+        <div th:each="product : ${similarProducts}" class="col-md-4">
+            <div class="card">
+                <img th:src="@{${product.imageUrl}}" class="card-img-top" alt="Product Image">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.name}"></h5>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group mt-2">
+                            <a th:href="@{'/product/' + ${product.id}}" class="btn btn-sm btn-primary">View</a>
+                        </div>
+                        <small class="text-muted" th:text="'Pret: ' + ${product.price}"></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDzwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

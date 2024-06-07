@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Orders Placed</title>
+</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-image: url('https://fetchpetcare.com/wp-content/uploads/2016/11/dreamstime_xxl_87694876.jpg');
+        font-family: Arial, sans-serif;
+        text-align: center;
+        color: #333;
+    }
+
+    .adminbox {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        width: 80%;
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 20px;
+        box-sizing: border-box;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tr:hover {
+        background-color: #f2f2f2;
+    }
+
+    th {
+        background-color: #343a40;
+        color: #fff;
+    }
+    .home-button-container {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+    }
+</style>
+
+<body>
+<div class="home-button-container">
+    <a class="home-button btn btn-primary" href="/customer">Home</a>
+</div>
+<div class="adminbox">
+    <div class="container-fluid text-center">
+        <h1>Comenzile plasate</h1>
+        <div>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Total Amount</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Card Number</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item: ${orders}">
+                    <td th:text="${item.id}"></td>
+                    <td th:text="${item.date}"></td>
+                    <td th:text="${item.totalAmount}"></td>
+                    <td th:text="${item.address}"></td>
+                    <td th:text="${item.phone}"></td>
+                    <td th:text="${item.status}"></td>
+                    <td th:text="${item.cardNumber}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="error" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Am intampinat o eroare la plasarea comenzii.</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="success" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addedProductLabel">Comanda a fost plasata cu suces.</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    function showNotEnough() {
+        $('#error').modal('show');
+    }
+
+    function showAddedProduct() {
+        $('#success').modal('show');
+    }
+
+    $(document).ready(function() {
+        const searchParams = new URLSearchParams(window.location.search);
+        console.log("URL Search Params: ", searchParams.toString());
+        if (searchParams.has('messageNotOrderPlaced')) {
+            showNotEnough();
+        }
+        if (searchParams.has('messageOrderPlaced')) {
+            showAddedProduct();
+        }
+    });
+</script>
+</body>
+</html>

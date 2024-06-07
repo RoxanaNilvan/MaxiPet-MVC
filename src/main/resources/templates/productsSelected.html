@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Recommended Products</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .home-button {
+            margin: 20px 0;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            transition: box-shadow 0.3s;
+        }
+        .card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .card img {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        .card-text {
+            font-size: 1rem;
+            color: #6c757d;
+        }
+        .modal-content {
+            border-radius: 10px;
+        }
+        .modal-header {
+            border-bottom: none;
+        }
+        .modal-footer {
+            border-top: none;
+        }
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="home-button">
+    <a class="btn btn-primary" href="/customer">Home</a>
+</div>
+<div class="container">
+    <h1 class="text-center mb-4">Recommended Products</h1>
+    <div th:if="${#lists.isEmpty(products)}">
+        <p class="text-center">No products found based on your criteria.</p>
+    </div>
+    <div class="row">
+        <div th:each="product : ${products}" class="col-md-4 mb-4">
+            <div class="card">
+                <img th:src="${product.imageUrl}" th:alt="${product.name}" class="card-img-top">
+                <div class="card-body text-center">
+                    <h2 class="card-title" th:text="${product.name}"></h2>
+                    <p class="card-text">Pret: <span th:text="${product.price}"></span> Lei</p>
+                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" th:data-target="'#addToCartModal-' + ${product.id}">Adauga in cos</button>
+                </div>
+            </div>
+            <div class="modal fade" th:id="'addToCartModal-' + ${product.id}" tabindex="-1" role="dialog" aria-labelledby="'addToCartModalLabel-' + ${product.id}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" th:id="'addToCartModalLabel-' + ${product.id}">Adaugă în coș</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="addToCartForm" th:action="@{'/cart/addToCart'}" method="POST">
+                            <div class="modal-body">
+                                <input type="hidden" id="productId" name="productId" th:value="${product.id}">
+                                <input type="hidden" id="productName" name="productName" th:value="${product.name}">
+                                <p th:text="${product.name}"></p>
+                                <img th:src="${product.imageUrl}" class="card-img-top mb-3" alt="Product Image">
+                                <input type="number" id="quantity" name="quantity" min="1" value="1" class="form-control" placeholder="Cantitate">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Adauga in cos</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

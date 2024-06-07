@@ -1,0 +1,8 @@
+com.onlineshop.maxipetbackend
+com.onlineshop.maxipetbackend.constants
+com.onlineshop.maxipetbackend.controllers
+com.onlineshop.maxipetbackend.dtos
+com.onlineshop.maxipetbackend.dtos.mappers
+com.onlineshop.maxipetbackend.entities
+com.onlineshop.maxipetbackend.repositories
+com.onlineshop.maxipetbackend.services

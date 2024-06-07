@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Reviews</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-image: url('https://fetchpetcare.com/wp-content/uploads/2016/11/dreamstime_xxl_87694876.jpg');
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .adminbox {
+            background-color: rgba(245, 245, 245, 0.9);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .button {
+            background-color: #007bff;
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            height: 40px;
+            width: 120px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+
+        .btn {
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            width: 60px;
+            height: 30px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .form-control:invalid {
+            border-color: #dc3545;
+            background-color: #fff0f1;
+        }
+
+        .form-control:valid {
+            border-color: #28a745;
+            background-color: #f8f9fa;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        th {
+            background-color: #343a40;
+            color: #fff;
+        }
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="home-button">
+    <a class="home-button btn btn-primary" href="/admin">Home</a>
+</div>
+<div class="adminbox">
+    <div class="container-fluid text-center">
+        <h1>Manage Reviews</h1>
+        <div>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Rating</th>
+                    <th>Comment</th>
+                    <th>ProductId</th>
+                    <th>Product Name</th>
+                    <th>UserId</th>
+                    <th>User First Name</th>
+                    <th>User Last Name</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="review: ${reviews}">
+                    <td th:text="${review.id}"></td>
+                    <td th:text="${review.rating}"></td>
+                    <td th:text="${review.comment}"></td>
+                    <td th:text="${review.productId}"></td>
+                    <td th:text="${review.productName}"></td>
+                    <td th:text="${review.userId}"></td>
+                    <td th:text="${review.userFirstName}"></td>
+                    <td th:text="${review.userLastName}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

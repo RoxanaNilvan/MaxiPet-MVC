@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maxi Pet</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .navbar {
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .jumbotron {
+            background-color: #d34549;
+            color: #fff;
+            padding: 3rem 1rem;
+            border-radius: 0;
+        }
+
+        .card {
+            border: none;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #d77777;
+            border-color: #d77777;
+        }
+
+        .btn-primary:hover {
+            background-color: #d77777;
+            border-color: #d77777;
+        }
+
+        .modal-content {
+            border-radius: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('https://fetchpetcare.com/wp-content/uploads/2016/11/dreamstime_xxl_87694876.jpg');
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .btn-primary {
+            background-color: #d77777;
+            border-color: #d77777;
+        }
+
+        .btn-primary:hover {
+            background-color: #d77777;
+            border-color: #d77777;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .btn-primary:hover,
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+        }
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer {
+            border-top: 1px solid #ddd;
+        }
+
+        footer {
+            background-color: #f8f9fa;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">Maxi Pet</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">Log In</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="jumbotron">
+        <h1 class="display-4">Bine ați venit la Maxi Pet!</h1>
+        <p class="lead">Aici găsiți cele mai bune produse pentru animalul dumneavoastră de companie.</p>
+    </div>
+
+    <div class="row">
+        <div th:each="product : ${homePage}" class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <img th:src="@{${product.imageUrl}}" class="card-img-top" alt="Product Image">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.name}"></h5>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group mt-2">
+                            <button type="button" class="btn btn-sm btn-primary mr-2">View</button>
+                        </div>
+                        <small class="text-muted" th:text="${product.price}"></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Log In</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/login" method="post">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email"> <!-- Adaugă name="email" -->
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password"> <!-- Adaugă name="password" -->
+                    </div>
+                    <button type="submit" class="btn btn-primary">Log In</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal" data-target="#createAccountModal">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="createAccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">Create Account</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form id="clientForm" action="/user/insertClient" method="POST" class="needs-validation" novalidate>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="firstName" placeholder="First Name" pattern="[A-Za-z]+" required>
+                            <div class="invalid-feedback">Introduceți un prenume valid (doar litere).</div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="lastName" placeholder="Last Name" pattern="[A-Za-z]+" required>
+                            <div class="invalid-feedback">Introduceți un nume valid (doar litere).</div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="userName" placeholder="User Name" pattern="[A-Za-z0-9]{5,50}" required>
+                            <div class="invalid-feedback">Numele de utilizator trebuie să aibă între 5 și 50 de caractere (litere și cifre).</div>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" name="email" placeholder="Email" required>
+                            <div class="invalid-feedback">Introduceți un email valid.</div>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" name="password" placeholder="Password" required>
+                            <div class="invalid-feedback">Introduceți o parolă.</div>
+                        </div>
+                        <input type="hidden" name="role" value="client">
+                        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    (function() {
+        'use strict';
+
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+</body>
+</html>

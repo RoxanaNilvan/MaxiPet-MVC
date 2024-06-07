@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Produse</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-image: url('https://fetchpetcare.com/wp-content/uploads/2016/11/dreamstime_xxl_87694876.jpg');
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: #333;
+        }
+
+        .adminbox {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .button {
+            background-color: #007bff;
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            height: 40px;
+            width: 120px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .form-control:invalid {
+            border-color: #dc3545;
+            background-color: #fff0f1;
+        }
+
+        .form-control:valid {
+            border-color: #28a745;
+            background-color: #f8f9fa;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        th {
+            background-color: #343a40;
+            color: #fff;
+        }
+
+        .modal-header .close {
+            color: #000;
+            opacity: 1;
+        }
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+        }
+        .sort-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 2px;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="home-button">
+    <a class="home-button btn btn-primary" href="/admin">Home</a>
+</div>
+<div class="adminbox">
+    <div class="container-fluid text-center">
+        <h1>Manage Products</h1>
+        <div>&nbsp;</div>
+        <button type="button" class="button" data-toggle="modal" data-target="#addProductModal">
+            Add New Product
+        </button>
+        <div>&nbsp;</div>
+        <div class="sort-container">
+            <form action="/product/sortByPrice" method="get">
+                <div class="form-group">
+                    <label for="sortOrder">Sort by Price:</label>
+                    <select id="sortOrder" name="sortOrder" class="form-control">
+                        <option value="ascending">Ascending</option>
+                        <option value="descending">Descending</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Sort</button>
+            </form>
+        </div>
+        <div>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Category Name</th>
+                    <th>Category Animal</th>
+                    <th>Actions</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product: ${products}">
+                    <td th:text="${product.id}"></td>
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${product.price}"></td>
+                    <td th:text="${product.stock}"></td>
+                    <td th:text="${product.categoryName}"></td>
+                    <td th:text="${product.categoryAnimal}"></td>
+                    <td>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" th:data-target="'#updateProductModal-' + ${product.id}">
+                        Edit
+                    </button>
+
+                    <div class="modal fade" th:id="'updateProductModal-' + ${product.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel2">Update Product</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="POST" th:action="@{'/product/updateProduct/' + ${product.id}}" class="needs-validation" novalidate enctype="multipart/form-data">
+                                        <div class="form-group">
+                                            <label for="updateName">Name:</label>
+                                            <input type="text" id="updateName" name="name" th:value="${product.name}" class="form-control" required>
+                                            <div class="invalid-feedback">Numele este obligatoriu.</div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="updatePrice">Pret:</label>
+                                            <input type="text" id="updatePrice" name="price" pattern="^\d+(\.\d{1,2})?$" th:value="${product.price}" class="form-control" required>
+                                            <div class="invalid-feedback">Introduceti un pret valid, un numar pozitiv.</div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="updateStock">Stock:</label>
+                                            <input type="number" id="updateStock" name="stock" th:value="${product.stock}" class="form-control" required>
+                                            <div class="invalid-feedback">Introduceți un număr valid pentru stoc.</div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="updateImage">Image:</label>
+                                            <input type="file" id="updateImage" name="image" class="form-control-file">
+                                            <small class="form-text text-muted">Selectați o imagine pentru a o încărca.</small>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <form id="deleteForm-${product.id}" method="POST" th:action="@{'/product/removeProduct/' + ${product.id}}">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Adaugare Produs Nou</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm" method="POST" th:action="@{/product/insertProduct}" class="needs-validation" novalidate enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="name">Nume:</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
+                        <div class="invalid-feedback">Numele este obligatoriu.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price">Pret:</label>
+                        <input type="text" id="price" name="price" pattern="^\d+(\.\d{1,2})?$" class="form-control" placeholder="Pret" required>
+                        <div class="invalid-feedback">Introduceti un pret valid, un numar pozitiv.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="stock">Stoc:</label>
+                        <input type="number" id="stock" name="stock" min="0" class="form-control" required>
+                        <div class="invalid-feedback">Introduceți un număr valid pentru stoc, un numar pozitiv.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categoryName">Nume Categorie:</label>
+                        <input type="text" id="categoryName" name="categoryName" class="form-control" required>
+                        <div class="invalid-feedback">Numele categoriei este obligatoriu.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categoryAnimal">Tip Animal:</label>
+                        <input type="text" id="categoryAnimal" name="categoryAnimal" class="form-control" required>
+                        <div class="invalid-feedback">Introduceți tipul de animal.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Imagine:</label>
+                        <input type="file" id="image" name="image" class="form-control-file" required>
+                        <div class="invalid-feedback">Adăugați o imagine.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Adauga Produs</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Produs adaugat cu succes!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorModalLabel">Produsul nu a fost adaugat!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successUpdateModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successUpdateModalLabel">Produs a fost actualizat cu success!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="errorUpdateModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorUpdateModalLabel">Produsul nu a fost gasit!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successDeleteModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successDeleteModalLabel">Produs a fost sters cu success!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="errorDeleteModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorDeleteModalLabel">Produsul nu a fost gasit!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+    function showSuccessModal() {
+        $('#successModal').modal('show');
+    }
+
+    function showErrorModal() {
+        $('#errorModal').modal('show');
+    }
+
+    function showSuccessUpdateModal() {
+        $('#successUpdateModal').modal('show');
+    }
+
+    function showErrorUpdateModal() {
+        $('#errorUpdateModal').modal('show');
+    }
+
+    function showSuccessDeleteModal() {
+        $('#successDeleteModal').modal('show');
+    }
+
+    function showErrorDeleteModal() {
+        $('#errorDeleteModal').modal('show');
+    }
+
+    const currentPathname = window.location.search;
+    const currentUrl = window.location.href;
+
+    if (currentPathname && (currentUrl.includes('?successInsert'))) {
+        showSuccessModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?errorInsert'))) {
+        showErrorModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?successUpdate'))) {
+        showSuccessUpdateModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?errorUpdate'))) {
+        showErrorUpdateModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?successDelete'))) {
+        showSuccessDeleteModal();
+    }
+
+    if (currentPathname && (currentUrl.includes('?errorDelete'))) {
+        showErrorDeleteModal();
+    }
+</script>
+<script>
+    // Custom validation script
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+
+</body>
+</html>
